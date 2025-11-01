@@ -1,5 +1,15 @@
-import pytest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch, Mock
+from src.auth.users import register
+from src.auth.schemas import User
+import unittest
+
+
+
+def test_register_data(self, mock_fetch_data: MagicMock):
+        user_data = {"username":"user1", "password":"testpass"}
+        mock_user = Mock(spec=User)
+        mock_user.username = user_data["username"]
+        mock_user.password = user_data["password"]
 
 def test_user_registration(client):
         # Тест 1: валидные входные данные
@@ -40,12 +50,3 @@ def test_user_login_bad_password(client):
         user_in_3 = {"username":"userfortest", "password":"ewqeqweqewq"}
         response = client.post("/login", json=user_in_3)
         assert response.status_code == 401
-
-def test_exchanger(client):
-        pass
-        
-
-
-
-
-        

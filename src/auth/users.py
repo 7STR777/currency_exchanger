@@ -16,7 +16,6 @@ async def register(us: User):
     """
     Этот маршрут регистрирует пользователя в базе данных.
     """
-    print(us.password)
     if us.password is None:
         raise HTTPException(status_code=400, detail='Необходимо ввести пароль')
     if us.username is None:
