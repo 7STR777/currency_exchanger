@@ -26,7 +26,6 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
-C:\Users\igorm\OneDrive\Desktop\etc\currencyexchange\structure_site.png
 
 # PyInstaller
 #   Usually these files are written by a python script from a template
@@ -145,9 +144,7 @@ rabbitmq-data/
 
 # ActiveMQ
 activemq-data/
-C:\Users\igorm\OneDrive\Desktop\currencyexchange\src\auth\test.py
-.vscode
-.c:\Users\igorm\OneDrive\Desktop\currencyexchange\currencyexchange.code-workspace
+
 # SageMath parsed files
 *.sage.py
 

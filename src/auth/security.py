@@ -11,7 +11,7 @@ def create_jwt_token(payload:dict):
     Функция создания токена
     """
     # Добавляем срок действия токена
-    expire = datetime.now() + timedelta(hours=24)
+    expire = datetime.utcnow() + timedelta(hours=24)
     payload.update({"exp": expire})
     
     try:
