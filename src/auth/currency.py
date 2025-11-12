@@ -1,7 +1,7 @@
 from fastapi import Depends, APIRouter, HTTPException, status
-from src.auth.security import get_user_from_token
+from auth.security import get_user_from_token
 import requests
-from src.config import BASE_URL, API_KEY
+from config import settings
 
 currencyroute = APIRouter()
 
@@ -11,8 +11,8 @@ async def currency_exchange(convert_from: str, convert_to: str, convert_amount: 
     """
     Этот маршрут защищен и требует токен. Выдает свежие обменные курсы для различных валют.
     """
-    headers = {"apikey":API_KEY}
-    URL = f"{BASE_URL}/convert?to={convert_to}&from={convert_from}&amount={convert_amount}"
+    headers = {"apikey":settings.API_KEY}
+    URL = f"{settings.BASE_URL}convert?to={convert_to}&from={convert_from}&amount={convert_amount}"
     response = requests.request("GET", URL, headers=headers)
 
     if response.status_code == 200:
@@ -29,10 +29,9 @@ async def currency_list(current_user: str = Depends(get_user_from_token)):
     """
     Этот маршрут защищен и требует токен. Выдает список доступных валют к обмену.
     """
-    headers = {"apikey":API_KEY}
+    headers = {"apikey":settings.API_KEY}
     URL = 'https://api.apilayer.com/currency_data/list'
     response = requests.request("GET", URL, headers=headers)
     result_list = response.json()
     return result_list
-    
     

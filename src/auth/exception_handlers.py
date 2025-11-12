@@ -2,7 +2,7 @@ from fastapi import HTTPException, Request, APIRouter, FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
-from src.auth.exceptions import CustomException
+from auth.exceptions import CustomException
 
 app = FastAPI()
 

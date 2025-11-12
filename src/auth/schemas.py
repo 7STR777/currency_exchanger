@@ -1,4 +1,4 @@
-from pydantic import BaseModel, field_validator,Field
+from pydantic import BaseModel, Field
 
 class User(BaseModel):
     username: str 
@@ -13,4 +13,3 @@ class CustomExceptionModel(BaseModel):
     status_code: int
     er_message: str
     er_details: str 
-

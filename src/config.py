@@ -1,11 +1,22 @@
-import os
-from dotenv import load_dotenv
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-load_dotenv()
-dbname = os.getenv("DBNAME")
-user = os.getenv("USER")
-password = os.getenv("PASSWORD")
-secret_key = os.getenv("SECRET_KEY")
-algorithm = os.getenv("ALGORITHM")
-BASE_URL = os.getenv("BASE_URL")
-API_KEY = os.getenv("API_KEY")
+
+class Settings(BaseSettings):
+    DB_NAME: str
+    DB_PORT: int
+    DB_PASS: str
+    DB_HOST: str
+    DB_USER: str
+    ALGORITHM: str
+    SECRET_KEY: str
+    BASE_URL: str
+    API_KEY: str
+
+    @property
+    def DATABASE_URL_asyncpg(self):
+        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+    
+    model_config = SettingsConfigDict(env_file="C:\\Users\\igorm\\OneDrive\\Desktop\\etc\\currencyexchange\src\\.env")
+    
+
+settings = Settings()
