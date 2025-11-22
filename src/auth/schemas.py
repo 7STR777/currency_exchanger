@@ -3,6 +3,7 @@ from pydantic import BaseModel, Field
 class User(BaseModel):
     username: str 
     password: str = Field(max_length=32, min_length=8)
+    email: str | None = None
 
 class Currency(BaseModel):
     convert_to: str

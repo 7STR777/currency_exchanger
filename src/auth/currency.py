@@ -1,13 +1,13 @@
 from fastapi import Depends, APIRouter, HTTPException, status
-from auth.security import get_user_from_token
+from auth.security import get_user_from_header, get_user_from_cookie
 import requests
 from config import settings
 
 currencyroute = APIRouter()
 
 
-@currencyroute.get("/currency/exchange/")
-async def currency_exchange(convert_from: str, convert_to: str, convert_amount: str, current_user: str = Depends(get_user_from_token)):
+@currencyroute.get("/api/convert")
+async def currency_exchange(convert_from: str, convert_to: str, convert_amount: str, current_user: str = Depends(get_user_from_cookie)):
     """
     Этот маршрут защищен и требует токен. Выдает свежие обменные курсы для различных валют.
     """
@@ -24,8 +24,8 @@ async def currency_exchange(convert_from: str, convert_to: str, convert_amount: 
     elif response.status_code == 401:
         raise HTTPException(status_code=401, detail='Вы не авторизованы!')
 
-@currencyroute.get("/currency/list")
-async def currency_list(current_user: str = Depends(get_user_from_token)):
+@currencyroute.get("/api/rates")
+async def currency_list(current_user: str = Depends(get_user_from_cookie)):
     """
     Этот маршрут защищен и требует токен. Выдает список доступных валют к обмену.
     """

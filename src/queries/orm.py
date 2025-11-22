@@ -5,9 +5,9 @@ from models import Users
 
 class AsyncORM:
     @staticmethod
-    async def insert_user(us: str, password: str):
+    async def insert_user(username: str, password: str, email: str):
         async with async_session_factory() as session:
-            new_user = Users(username=us, password=password)
+            new_user = Users(username=username, password=password, email=email)
             session.add(new_user)
             await session.flush()
             await session.commit()

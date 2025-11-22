@@ -1,17 +1,18 @@
 import jwt as pyjwt
-from fastapi.security import OAuth2PasswordBearer
-from fastapi import HTTPException, status, Depends
+from fastapi.security import OAuth2PasswordBearer, HTTPAuthorizationCredentials, HTTPBearer
+from fastapi.requests import Request
+from fastapi import HTTPException, status, Depends, Cookie
 from datetime import datetime, timedelta
 from config import settings
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+security = HTTPBearer(auto_error=False)
 
 def create_jwt_token(payload:dict):
     """
     Функция создания токена
     """
-    # Добавляем срок действия токена
-    expire = datetime.now() + timedelta(hours=24)
+    expire = datetime.now() + timedelta(hours=1)
     payload.update({"exp": expire})
     
     try:
@@ -23,14 +24,33 @@ def create_jwt_token(payload:dict):
             detail=f"Token creation error: {str(e)}"
         )
 
-def get_user_from_token(token: str = Depends(oauth2_scheme)):
+def get_user_from_header(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """
-    Функция для извлечения информации о пользователе из токена. Проверяем токен и извлекаем утверждение о пользователе.
+    Зависимость для получения пользователя из cookie access_token.
     """
+    if not credentials:
+        raise HTTPException(status_code=401, detail='Токен не предоставлен')
     try:
-        payload = pyjwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])  # Декодируем токен с помощью секретного ключа
-        return payload.get("sub") 
-    except pyjwt.ExpiredSignatureError as e:
+        payload = pyjwt.decode(credentials.credentials, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username = payload.get("sub")
+        return username
+    except pyjwt.ExpiredSignatureError:
         raise HTTPException(status_code=401, detail='Сессия закончена')
-    except pyjwt.InvalidTokenError as e:
+    except pyjwt.InvalidTokenError:
+        raise HTTPException(status_code=401, detail='Вы не авторизованы')
+    
+def get_user_from_cookie(request: Request):
+    """
+    Зависимость для получения пользователя из cookie access_token.
+    """
+    access_token = request.cookies.get("access_token")
+    if not access_token:
+        raise HTTPException(status_code=401, detail='Токен не предоставлен')
+    try:
+        payload = pyjwt.decode(access_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username = payload.get("sub")
+        return username
+    except pyjwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail='Сессия закончена')
+    except pyjwt.InvalidTokenError:
         raise HTTPException(status_code=401, detail='Вы не авторизованы')

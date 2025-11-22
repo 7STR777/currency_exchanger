@@ -7,20 +7,24 @@ from config import settings
 
 async_engine = create_async_engine(
     url = settings.DATABASE_URL_asyncpg,
-    echo = True
+    echo = False
 )
 async_session_factory = async_sessionmaker(async_engine)
 
+str_3 = Annotated[str, 3]
 str_256 = Annotated[str, 256]
+str_50 = Annotated[str, 50]
 
 class Base(DeclarativeBase):
     type_annotation_map = {
-        str_256: String(256)
+        str_256: String(256),
+        str_3: String(3)
     }
 
     repr_cols_num = 3
     repr_cols = tuple()
     
+
     def __repr__(self):
         cols = []
         for idx, col in enumerate(self.__table__.columns.keys()):
