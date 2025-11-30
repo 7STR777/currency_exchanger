@@ -1,6 +1,6 @@
 from sqlalchemy import select
 from database import async_session_factory
-from models import Users
+from models import Users, Banners, Articles
 
 
 class AsyncORM:
@@ -19,3 +19,19 @@ class AsyncORM:
             result = await session.execute(query)
             user = result.scalars().first()
             return user
+
+    @staticmethod
+    async def select_banners():
+        async with async_session_factory() as session:
+            query = select(Banners)
+            result = await session.execute(query)
+            banners = result.scalars().all()
+            return banners
+        
+    @staticmethod
+    async def get_article_from_db():
+        async with async_session_factory() as session:
+            query = select(Articles)
+            result = await session.execute(query)
+            articles = result.scalars().all()
+            return articles

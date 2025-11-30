@@ -16,7 +16,7 @@ class Users(Base):
     password: Mapped[str_256]
     email: Mapped[str]
 
-class conversion_history(Base):
+class Conversion_history(Base):
     __tablename__ = "conversion_history"
 
     history_id: Mapped[intpk]
@@ -27,15 +27,13 @@ class conversion_history(Base):
     result: Mapped[Decimal] = mapped_column(Numeric(precision=20, scale=2))
     timestamp: Mapped[created_at]
 
-class banners(Base):
+class Banners(Base):
     __tablename__ = "banners"
 
     banner_id: Mapped[intpk]
-    image_url: Mapped[str]
-    click_url: Mapped[str]
-    is_active: Mapped[bool]
+    code: Mapped[str]
 
-class reviews(Base):
+class Reviews(Base):
     __tablename__ = "reviews"
 
     review_id: Mapped[intpk]
@@ -44,3 +42,11 @@ class reviews(Base):
     rating: Mapped[int]
     comment: Mapped[str]
     timestamp: Mapped[created_at]
+
+class Articles(Base):
+    __tablename__ = "articles"
+
+    article_id: Mapped[intpk]
+    title: Mapped[str_256]
+    intro_text: Mapped[str]
+    full_text: Mapped[str]

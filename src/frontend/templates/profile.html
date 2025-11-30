@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль - Быстрый Обменник</title>
     <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <!-- Шапка сайта -->
@@ -30,29 +31,8 @@
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-item">
-                <button class="nav-btn" onclick="toggleDropdown('exchangeDropdown')">
-                    Направление обмена ▼
-                </button>
-                <div class="dropdown" id="exchangeDropdown">
-                    <div class="dropdown-item dropdown-category">Популярные валюты</div>
-                    <div class="dropdown-item">USD - Доллар США</div>
-                    <div class="dropdown-item">EUR - Евро</div>
-                    <div class="dropdown-item">GBP - Фунт стерлингов</div>
-                    <div class="dropdown-item">JPY - Японская йена</div>
-                    <div class="dropdown-item dropdown-category">Редкие валюты</div>
-                    <div class="dropdown-item">CHF - Швейцарский франк</div>
-                    <div class="dropdown-item">AED - Дирхам ОАЭ</div>
-                    <div class="dropdown-item">SGD - Сингапурский доллар</div>
-                    <div class="dropdown-item dropdown-category">Криптовалюта</div>
-                    <div class="dropdown-item">BTC - Bitcoin</div>
-                    <div class="dropdown-item">ETH - Ethereum</div>
-                    <div class="dropdown-item">USDT - Tether</div>
-                </div>
-            </div>
-            
-            <div class="nav-item">
-                <button class="nav-btn" onclick="window.location.href='/history'">
-                    История конвертаций
+                <button class="nav-btn" onclick="showArticles()">
+                    Статьи
                 </button>
             </div>
             
@@ -64,28 +44,95 @@
         </div>
     </nav>
 
-    <!-- Рекламный баннер -->
-    <div class="banner-section">
-        <div class="banner-title">🎉 Специальное предложение!</div>
-        <p>Обменивайте валюту по выгодному курсу без комиссии до конца месяца</p>
-    </div>
-
     <!-- Основной контент -->
     <main class="main-content">
-        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 30px;">
-            <section class="card">
-                <h2 class="section-title">Обмен валют</h2>
-                <div style="text-align: center; padding: 40px; color: #666;">
-                    Форма обмена валют будет здесь...
+        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 30px;">
+            <!-- Главная страница с историей конвертаций -->
+            <div id="mainPage" class="card">
+                <h2 class="section-title">История конвертаций</h2>
+                <div class="conversion-history">
+                    <div class="history-filters">
+                        <div class="filter-group">
+                            <label for="dateFrom">От:</label>
+                            <input type="date" id="dateFrom" class="form-input" style="width: auto; margin-right: 20px;">
+                        </div>
+                        <div class="filter-group">
+                            <label for="dateTo">До:</label>
+                            <input type="date" id="dateTo" class="form-input" style="width: auto; margin-right: 20px;">
+                        </div>
+                        <button class="btn btn-primary" onclick="filterHistory()">Применить фильтр</button>
+                    </div>
+                    
+                    <div class="history-table-container">
+                        <table class="history-table">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Из валюты</th>
+                                    <th>В валюту</th>
+                                    <th>Сумма</th>
+                                    <th>Результат</th>
+                                    <th>Курс</th>
+                                </tr>
+                            </thead>
+                            <tbody id="historyTableBody">
+                                <tr class="empty-row">
+                                    <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
+                                        История конвертаций пуста. Совершите первую операцию обмена валют.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </section>
+            </div>
 
-            <aside class="card">
-                <h2 class="section-title">Курсы валют</h2>
-                <div style="text-align: center; padding: 20px; color: #666;">
-                    Текущие курсы будут здесь...
+            <!-- Страница со статьями (скрыта по умолчанию) -->
+            <div id="articlesPage" class="card" style="display: none;">
+                <h2 class="section-title">Статьи</h2>
+                <div class="articles-container">
+                    <div class="article-list">
+                        <div class="article-item">
+                            <h3 class="article-title">Как выбрать лучший курс обмена валют</h3>
+                            <p class="article-preview">Узнайте, на что обращать внимание при выборе обменного пункта и как получить максимально выгодный курс обмена валют.</p>
+                            <span class="article-date">15 января 2025</span>
+                        </div>
+                        <div class="article-item">
+                            <h3 class="article-title">Валютные операции: что нужно знать</h3>
+                            <p class="article-preview">Основные правила и особенности обмена валют, документы, необходимые для операций, и советы по безопасности.</p>
+                            <span class="article-date">10 января 2025</span>
+                        </div>
+                        <div class="article-item">
+                            <h3 class="article-title">Тренды валютного рынка 2025</h3>
+                            <p class="article-preview">Анализ текущей ситуации на валютном рынке и прогнозы экспертов на ближайшие месяцы.</p>
+                            <span class="article-date">5 января 2025</span>
+                        </div>
+                    </div>
                 </div>
-            </aside>
+            </div>
+
+            <!-- Рекламный блок справа -->
+            <div class="right-column">
+                <div class="card recommendation-card">
+                    <div class="ad-sidebar">
+                        <div class="ad-banner">
+                            <img src="https://cdn.tbank.ru/static/pages/files/ade88b82-3718-4cd2-8efe-d4cb9b6f46b3.png" alt="Реклама">
+                        </div>
+
+                        <div class="ad-banner">
+                            <img src="https://messageguru.ru/wp-content/uploads/2020/09/SBER_%D0%9E%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B8%CC%86-%D0%BA%D1%80%D0%B5%D0%B4%D0%B8%D1%82-1.jpg" alt="Реклама">
+                        </div>
+
+                        <div class="ad-banner">
+                            <img src="https://optim.tildacdn.com/tild6135-3832-4838-b539-383830666432/-/format/webp/-.png.webp" alt="Реклама">
+                        </div>
+
+                        <div class="ad-banner">
+                            <img src="https://i.mycdn.me/getVideoPreview?id=7916676319996&idx=5&type=39&tkn=A3OGXzXKDb9jbNnP4nVmP9vWpL0&fn=vid_u" alt="Реклама">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
@@ -112,7 +159,7 @@
         </div>
         
         <div class="copyright">
-            &copy; 2024 Быстрый Обменник. Все права защищены.
+            &copy; 2025 Быстрый Обменник. Все права защищены.
         </div>
     </footer>
 
@@ -133,6 +180,27 @@
                 console.error('Logout error:', error);
                 window.location.href = '/login';
             }
+        }
+
+        function showArticles() {
+            const mainPage = document.getElementById('mainPage');
+            const articlesPage = document.getElementById('articlesPage');
+            
+            if (mainPage.style.display !== 'none') {
+                mainPage.style.display = 'none';
+                articlesPage.style.display = 'block';
+            } else {
+                mainPage.style.display = 'block';
+                articlesPage.style.display = 'none';
+            }
+        }
+
+        function filterHistory() {
+            // Функционал фильтрации будет добавлен позже
+            console.log('Фильтрация истории конвертаций');
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+            console.log('Период:', dateFrom, '-', dateTo);
         }
 
         function toggleDropdown(dropdownId) {

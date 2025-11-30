@@ -46,16 +46,28 @@
     </div>
 
     <script>
-        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            document.getElementById('registrationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            if (password !== confirmPassword) {
+            document.getElementById('confirmPasswordError').style.display = 'none';
+            
+            let isValid = true;
+            
+            if (password.length < 8) {
+                document.getElementById('confirmPasswordError').style.display = 'block';
+                document.getElementById('confirmPasswordError').textContent = 'Пароль должен быть длиннее 8 символов';
+                isValid = false;
+            }
+            else if (password !== confirmPassword) {
                 document.getElementById('confirmPasswordError').style.display = 'block';
                 document.getElementById('confirmPasswordError').textContent = 'Пароли не совпадают';
-            } else {
+                isValid = false;
+            }
+            
+            if (isValid) {
                 this.submit();
             }
         });

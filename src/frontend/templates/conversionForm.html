@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер валют</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <!-- Шапка -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">$</div>
+                <span>Конвертер валют</span>
+            </div>
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Навигация -->
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-item">
+                <button class="nav-btn" onclick="window.location.href='/profile'" id="profileBtn">
+                    Профиль
+                </button>
+            </div>
+            <div class="nav-item">
+                <button class="nav-btn" onclick="window.location.href='/history'" id="convertBtn">
+                    Конвертация
+                </button>
+            </div>
+            <div class="nav-item">
+                <button class="nav-btn" id="historyBtn">История операций</button>
+                <div class="dropdown" id="historyDropdown">
+                    <div class="dropdown-item dropdown-category">История</div>
+                    <div class="dropdown-item">Последние операции</div>
+                    <div class="dropdown-item">Экспорт данных</div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Баннер -->
+    <section class="banner-section">
+        <h2 class="banner-title">Конвертер валют в реальном времени</h2>
+        <p>Актуальные курсы валют с быстрой конвертацией</p>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <div class="card">
+            <h2>Конвертация валют</h2>
+            <p>Выберите валюты и сумму для конвертации</p>
+            
+            <form id="conversionForm">
+                <div class="form-group">
+                    <label class="form-label" for="convertFrom">Из валюты:</label>
+                    <select class="form-input" id="convertFrom" required>
+                        <option value="">Выберите валюту</option>
+                        <!-- Варианты валют будут загружены через JavaScript -->
+                    </select>
+                    <div class="error-message" id="convertFromError">Пожалуйста, выберите валюту</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="convertTo">В валюту:</label>
+                    <select class="form-input" id="convertTo" required>
+                        <option value="">Выберите валюту</option>
+                        <!-- Варианты валют будут загружены через JavaScript -->
+                    </select>
+                    <div class="error-message" id="convertToError">Пожалуйста, выберите валюту</div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="convertAmount">Сумма:</label>
+                    <input type="number" class="form-input" id="convertAmount" min="0" step="0.01" placeholder="Введите сумму" required>
+                    <div class="error-message" id="convertAmountError">Пожалуйста, введите корректную сумму</div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Конвертировать</button>
+            </form>
+            
+            <div id="resultContainer" style="display: none; margin-top: 20px;">
+                <h3>Результат конвертации:</h3>
+                <div class="card" id="conversionResult">
+                    <!-- Результат будет отображен здесь -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>О сервисе</h3>
+                <p>Конвертер валют с актуальными курсами в реальном времени.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Быстрые ссылки</h3>
+                <a href="#">Главная</a>
+                <a href="#">Конвертер</a>
+                <a href="#">История</a>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <a href="mailto:support@example.com">support@example.com</a>
+                <a href="tel:+1234567890">+1 (234) 567-890</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2023 Конвертер валют. Все права защищены.
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Здесь должен быть код для получения данных пользователя из API
+            // Временно используем заглушки
+            document.getElementById('username').textContent = {username};
+            document.getElementById('email').textContent = {email};
+            
+            // Загрузка списка валют
+            loadCurrencyList();
+            
+            // Настройка обработчиков событий
+            setupEventListeners();
+        });
+
+        // Загрузка списка валют из API
+        async function loadCurrencyList() {
+            try {
+                const response = await fetch('/api/rates', {
+                    method: 'GET',
+                    credentials: 'include' // для передачи куки авторизации
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    populateCurrencyDropdowns(data.currencies);
+                } else {
+                    console.error('Ошибка загрузки списка валют');
+                    // В случае ошибки можно показать базовый список валют
+                    populateCurrencyDropdowns({
+                        "USD": "United States Dollar",
+                        "EUR": "Euro",
+                        "GBP": "British Pound Sterling",
+                        "JPY": "Japanese Yen",
+                        "CAD": "Canadian Dollar",
+                        "AUD": "Australian Dollar",
+                        "CHF": "Swiss Franc",
+                        "CNY": "Chinese Yuan",
+                        "RUB": "Russian Ruble"
+                    });
+                }
+            } catch (error) {
+                console.error('Ошибка при загрузке списка валют:', error);
+            }
+        }
+
+        // Заполнение выпадающих списков валют
+        function populateCurrencyDropdowns(currencies) {
+            const fromSelect = document.getElementById('convertFrom');
+            const toSelect = document.getElementById('convertTo');
+            
+            // Очистка существующих опций (кроме первой)
+            while (fromSelect.options.length > 1) {
+                fromSelect.remove(1);
+            }
+            while (toSelect.options.length > 1) {
+                toSelect.remove(1);
+            }
+            
+            // Добавление валют в списки
+            for (const [code, name] of Object.entries(currencies)) {
+                const optionFrom = document.createElement('option');
+                optionFrom.value = code;
+                optionFrom.textContent = `${code} - ${name}`;
+                fromSelect.appendChild(optionFrom);
+                
+                const optionTo = document.createElement('option');
+                optionTo.value = code;
+                optionTo.textContent = `${code} - ${name}`;
+                toSelect.appendChild(optionTo);
+            }
+        }
+
+        // Настройка обработчиков событий
+        function setupEventListeners() {
+            // Обработчик отправки формы
+            document.getElementById('conversionForm').addEventListener('submit', handleConversion);
+            
+            // Обработчики для навигации
+            document.getElementById('historyBtn').addEventListener('click', function() {
+                document.getElementById('historyDropdown').classList.toggle('show');
+            });
+            
+            // Закрытие выпадающего меню при клике вне его
+            document.addEventListener('click', function(event) {
+                if (!event.target.matches('#historyBtn')) {
+                    const dropdown = document.getElementById('historyDropdown');
+                    if (dropdown.classList.contains('show')) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+            
+            // Обработчик кнопки выхода
+            document.getElementById('logoutBtn').addEventListener('click', function() {
+                // Здесь должен быть код для выхода из системы
+                alert('Выход из системы');
+            });
+        }
+
+        // Обработка конвертации валют
+        async function handleConversion(event) {
+            event.preventDefault();
+            
+            // Сброс предыдущих ошибок
+            resetErrors();
+            
+            // Получение данных формы
+            const convertFrom = document.getElementById('convertFrom').value;
+            const convertTo = document.getElementById('convertTo').value;
+            const convertAmount = document.getElementById('convertAmount').value;
+            
+            // Валидация
+            let isValid = true;
+            
+            if (!convertFrom) {
+                document.getElementById('convertFromError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!convertTo) {
+                document.getElementById('convertToError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!convertAmount || parseFloat(convertAmount) <= 0) {
+                document.getElementById('convertAmountError').style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            // Выполнение конвертации
+            try {
+                const response = await fetch(`/api/convert?convert_from=${convertFrom}&convert_to=${convertTo}&convert_amount=${convertAmount}`, {
+                    method: 'GET',
+                    credentials: 'include' // для передачи куки авторизации
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    displayConversionResult(result);
+                } else {
+                    throw new Error('Ошибка конвертации');
+                }
+            } catch (error) {
+                console.error('Ошибка при конвертации:', error);
+                alert('Произошла ошибка при конвертации. Пожалуйста, попробуйте позже.');
+            }
+        }
+
+        // Сброс сообщений об ошибках
+        function resetErrors() {
+            document.getElementById('convertFromError').style.display = 'none';
+            document.getElementById('convertToError').style.display = 'none';
+            document.getElementById('convertAmountError').style.display = 'none';
+        }
+
+        // Отображение результата конвертации
+        function displayConversionResult(result) {
+            const resultContainer = document.getElementById('resultContainer');
+            const conversionResult = document.getElementById('conversionResult');
+            
+            const conversionData = result['Convertation result'];
+            
+            conversionResult.innerHTML = `
+                <p><strong>Из валюты:</strong> ${conversionData.Convert_from}</p>
+                <p><strong>Сумма:</strong> ${conversionData.Amount}</p>
+                <p><strong>В валюту:</strong> ${conversionData.Convert_to}</p>
+                <p><strong>Конвертированная сумма:</strong> ${conversionData.Converted_amount.toFixed(2)}</p>
+            `;
+            
+            resultContainer.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

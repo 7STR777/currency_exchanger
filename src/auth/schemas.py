@@ -14,3 +14,7 @@ class CustomExceptionModel(BaseModel):
     status_code: int
     er_message: str
     er_details: str 
+
+class Banner(BaseModel):
+    banner_id: int
+    code: str
