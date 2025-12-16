@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отзывы | Валюта-Профи</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="reviews-page">
+            <div class="reviews-main">
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px;">
+                        ← Назад
+                    </button>
+                </div>
+                
+                <div class="make-review card" style="margin-bottom: 30px; padding: 25px;">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Оставьте отзыв</h3>
+                    
+                    <div class="form-group" style="margin-bottom: 25px;">
+                        <label class="form-label" style="display: block; margin-bottom: 10px; font-weight: 600;">Оценка:</label>
+                        <div class="rating-options" style="display: flex; gap: 20px; flex-wrap: wrap;">
+                            <label class="rating-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rating" value="1" style="width: 18px; height: 18px;">
+                                <span>1 - Очень плохо</span>
+                            </label>
+                            <label class="rating-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rating" value="2" style="width: 18px; height: 18px;">
+                                <span>2 - Плохо</span>
+                            </label>
+                            <label class="rating-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rating" value="3" style="width: 18px; height: 18px;">
+                                <span>3 - Удовлетворительно</span>
+                            </label>
+                            <label class="rating-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rating" value="4" style="width: 18px; height: 18px;">
+                                <span>4 - Хорошо</span>
+                            </label>
+                            <label class="rating-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                <input type="radio" name="rating" value="5" style="width: 18px; height: 18px;">
+                                <span>5 - Отлично</span>
+                            </label>
+                        </div>
+                        <div class="error-message" id="ratingError" style="display: none; color: #dc3545; font-size: 14px; margin-top: 5px;"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Текст отзыва:</label>
+                        <textarea class="review-text form-input" id="reviewText" rows="6" placeholder="Расскажите о вашем опыте работы с нашим сервисом..."></textarea>
+                        <div class="error-message" id="textError" style="display: none;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="addReview()" style="padding: 12px 30px;">
+                            Добавить отзыв
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearReviewForm()" style="padding: 12px 30px;">
+                            Очистить форму
+                        </button>
+                    </div>
+                    
+                    <div id="reviewSuccess" class="success-message" style="display: none; margin-top: 15px; padding: 10px; background: #d4edda; color: #155724; border-radius: 6px;">
+                        Отзыв успешно добавлен!
+                    </div>
+                </div>
+                
+                <div class="reviews-container">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Отзывы других пользователей</h3>
+                    <div class="review-list"></div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card" style="padding: 20px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Баннеры загружаются динамически> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Международные финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+    <script>
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+            banners.forEach(banner => {
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBannersPreview();
+        });
+        
+        function clearReviewForm() {
+            // Сброс radio buttons
+            const radioButtons = document.querySelectorAll('input[name="rating"]');
+            radioButtons.forEach(radio => radio.checked = false);
+            
+            // Очистка текстового поля
+            document.getElementById('reviewText').value = '';
+            
+            // Скрытие сообщений об ошибках
+            document.getElementById('ratingError').style.display = 'none';
+            document.getElementById('textError').style.display = 'none';
+            document.getElementById('reviewSuccess').style.display = 'none';
+        }
+
+        // Функция добавления отзыва
+        async function addReview() {
+            // Получаем выбранную оценку
+            const ratingInput = document.querySelector('input[name="rating"]:checked');
+            const rating = ratingInput ? parseInt(ratingInput.value) : null;
+            
+            // Получаем текст отзыва
+            const comment = document.getElementById('reviewText').value.trim();
+            
+            // Скрываем предыдущие сообщения об ошибках
+            document.getElementById('ratingError').style.display = 'none';
+            document.getElementById('textError').style.display = 'none';
+            document.getElementById('reviewSuccess').style.display = 'none';
+            
+            let hasError = false;
+            
+            // Валидация оценки
+            if (!rating) {
+                document.getElementById('ratingError').textContent = 'Пожалуйста, выберите оценку';
+                document.getElementById('ratingError').style.display = 'block';
+                hasError = true;
+            }
+            
+            // Валидация текста отзыва
+            if (!comment) {
+                document.getElementById('textError').textContent = 'Пожалуйста, напишите текст отзыва';
+                document.getElementById('textError').style.display = 'block';
+                hasError = true;
+            } else if (comment.length < 10) {
+                document.getElementById('textError').textContent = 'Отзыв должен содержать минимум 10 символов';
+                document.getElementById('textError').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            try {
+                const reviewData = {
+                    rating: rating,
+                    comment: comment
+                };
+                
+                const response = await fetch('/api/insert/review', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(reviewData),
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    // Показываем сообщение об успехе
+                    document.getElementById('reviewSuccess').textContent = 'Ваш отзыв успешно добавлен!';
+                    document.getElementById('reviewSuccess').style.display = 'block';
+                    
+                    // Очищаем форму
+                    clearReviewForm();
+                    
+                    // Загружаем обновленный список отзывов
+                    await loadReviews();
+                    
+                    // Прокручиваем к списку отзывов
+                    document.querySelector('.reviews-container').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    
+                } else if (response.status === 401) {
+                    alert('Вы не авторизованы! Пожалуйста, войдите в систему.');
+                    window.location.href = '/login';
+                } else if (response.status === 422) {
+                    const errorData = await response.json();
+                    console.error('Ошибка валидации:', errorData);
+                    alert(`Ошибка валидации данных: ${JSON.stringify(errorData.detail)}`);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка добавления отзыва: ${errorData.detail || 'Неизвестная ошибка'}`);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка при добавлении отзыва:', error);
+                alert('Ошибка сети. Пожалуйста, попробуйте позже.');
+            }
+        }
+        // Функция загрузки отзывов с сервера
+        async function loadReviews() {
+            try {
+                const response = await fetch('/api/reviews', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const reviews = await response.json();
+                    renderReviews(reviews);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки отзывов:', error);
+            }
+        }
+        
+        // Функция отображения отзывов
+        function renderReviews(reviews) {
+            const reviewList = document.querySelector('.review-list');
+            if (!reviewList) return;
+
+            reviewList.innerHTML = '';
+            
+            // Сортируем отзывы по дате (новые первыми)
+            reviews.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Отображаем каждый отзыв
+            reviews.forEach((review, index) => {
+                const reviewElement = document.createElement('div');
+                reviewElement.className = 'review-item';
+                
+                // Форматируем дату
+                const date = new Date(review.timestamp);
+                const formattedDate = date.toLocaleDateString('ru-RU', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                
+                reviewElement.innerHTML = `
+                    <div class="review-item-content" style="padding: 20px; border-bottom: 1px solid #eaeaea;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-size: 18px; font-weight: bold; color: #333; margin-bottom: 5px;">
+                                    ${review.username}
+                                </div>
+                                <div style="font-size: 14px; color: #666;">
+                                    ${formattedDate}
+                                </div>
+                            </div>
+                            <div style="font-size: 18px; font-weight: bold; color: #1e3c72; background: #e8f4ff; padding: 8px 16px; border-radius: 20px;">
+                                ${review.rating}/5
+                            </div>
+                        </div>
+                        <div style="font-size: 16px; line-height: 1.6; color: #444;">
+                            ${review.comment}
+                        </div>
+                    </div>
+                `;
+                
+                // Добавляем анимацию появления
+                reviewElement.style.opacity = '0';
+                reviewElement.style.transform = 'translateY(20px)';
+                reviewElement.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                
+                reviewList.appendChild(reviewElement);
+                
+                // Запускаем анимацию с задержкой
+                setTimeout(() => {
+                    reviewElement.style.opacity = '1';
+                    reviewElement.style.transform = 'translateY(0)';
+                }, 100 * index);
+            });
+        }
+        
+        // Функция выхода
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        };
+        
+        // Загружаем отзывы при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            loadReviews();
+        });
+    </script>
+</body>
+</html>

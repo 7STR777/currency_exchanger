@@ -15,6 +15,7 @@ class Users(Base):
     username: Mapped[str_256]
     password: Mapped[str_256]
     email: Mapped[str]
+    role: Mapped[str]
 
 class Conversion_history(Base):
     __tablename__ = "conversion_history"
@@ -38,7 +39,7 @@ class Reviews(Base):
 
     review_id: Mapped[intpk]
     user_id: Mapped[int] = mapped_column(ForeignKey("users.user_id", ondelete="CASCADE"))
-    user_name: Mapped[str_50]
+    username: Mapped[str_256]
     rating: Mapped[int]
     comment: Mapped[str]
     timestamp: Mapped[created_at]
@@ -50,3 +51,4 @@ class Articles(Base):
     title: Mapped[str_256]
     intro_text: Mapped[str]
     full_text: Mapped[str]
+    codeimg: Mapped[str]

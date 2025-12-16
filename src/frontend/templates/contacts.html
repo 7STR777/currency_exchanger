@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="style.css">
+    <title>Контакты | Валюта-Профи</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 30px; max-width: 1500px; margin: 0 auto; padding: 20px;">
+            <div>
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px; margin-bottom: 20px;">
+                        ← Назад
+                    </button>
+                </div>
+                
+                <div class="contacts-container">
+                    
+                    <div class="contact-info" style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                        <h3 style="color: #2a5298; margin-bottom: 25px;">Свяжитесь с нами</h3>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                            <div>
+                                <h4 style="color: #333; margin-bottom: 15px;">Контактная информация</h4>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: bold; color: #555; margin-bottom: 5px;">Электронная почта</div>
+                                    <div style="font-size: 16px;">support@valuta-profi.ru</div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: bold; color: #555; margin-bottom: 5px;">Телефон</div>
+                                    <div style="font-size: 16px;">+7 (495) 123-45-67</div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: bold; color: #555; margin-bottom: 5px;">Время работы</div>
+                                    <div style="font-size: 16px;">Пн-Пт: 9:00 - 18:00</div>
+                                    <div style="font-size: 16px;">Сб-Вс: 10:00 - 16:00</div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 style="color: #333; margin-bottom: 15px;">Адрес</h4>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: bold; color: #555; margin-bottom: 5px;">Головной офис</div>
+                                    <div style="font-size: 16px;">г. Москва, ул. Финансовая, д. 15</div>
+                                    <div style="font-size: 16px;">БЦ "Финансовый центр", офис 301</div>
+                                </div>
+                                
+                                <div style="margin-bottom: 20px;">
+                                    <div style="font-weight: bold; color: #555; margin-bottom: 5px;">Техническая поддержка</div>
+                                    <div style="font-size: 16px;">Круглосуточно</div>
+                                    <div style="font-size: 16px;">Через онлайн-чат на сайте</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card" style="padding: 5px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Баннеры загружаются динамически> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Международные финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+    <script>
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+            banners.forEach(banner => {
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBannersPreview();
+        });
+
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+    </script>
+</body>
+</html>

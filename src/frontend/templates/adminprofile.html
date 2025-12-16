@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Профиль - Быстрый Обменник</title>
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,14 +21,36 @@
                 <a href="/contacts" class="header-nav-link">Контакты</a>
             </nav>
             
-            <div style="display: flex; justify-content: flex-end;">
-                <button class="btn btn-primary" onclick="window.location.href='/login'" 
-                        style="padding: 10px 25px; font-size: 1em;">
-                    Войти
-                </button>
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
             </div>
         </div>
     </header>
+
+    <nav class="nav">
+        <div class="nav-content">
+            <div class="nav-item">
+                <button class="nav-btn" onclick="navigateToArticles()">
+                    Статьи
+                </button>
+            </div>
+            
+            <div class="nav-item">
+                <button class="nav-btn" onclick="navigateToReviews()">
+                    Гостевая книга
+                </button>
+            </div>
+            <div class="nav-item">
+                <button class="nav-btn" onclick="window.location.href = '/editbanners'">
+                    Изменение баннеров
+                </button>
+            </div>
+        </div>
+    </nav>
 
     <main class="main-content">
         <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 30px;">
@@ -40,7 +62,7 @@
                         Прием и Выдача наличных денежных средств по миру | 
                         Возможность оплаты с Юридических лиц | 
                         Возврат валютной выручки </p>
-                    <button class="btn" style="background: white; color: #667eea; font-weight: bold; padding: 15px 40px; font-size: 1.1em;" onclick="window.location.href='/registration'">
+                    <button class="btn" style="background: white; color: #667eea; font-weight: bold; padding: 15px 40px; font-size: 1.1em;" onclick="window.location.href='/contacts'">
                         Начать обмен
                     </button>
                 </section>
@@ -97,26 +119,6 @@
                             <div style="font-weight: bold;">CNY/RUB</div>
                             <div style="color: #4CAF50; font-size: 1.2em;">11.80 ₽</div>
                         </div>
-                    </div>
-                    
-                    <p style="text-align: center; margin-top: 20px; color: #666; font-size: 0.9em;">
-                        Курсы обновляются в реальном времени. Для работы с актуальными курсами требуется авторизация.
-                    </p>
-                </div>
-
-                <div class="login-prompt">
-                    <h3 style="margin-bottom: 15px;">Хотите получить полный доступ?</h3>
-                    <p style="margin-bottom: 20px; color: #666;">
-                        Зарегистрируйтесь, чтобы использовать конвертер валют, отслеживать историю операций 
-                        и получать персональные предложения
-                    </p>
-                    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                        <button class="btn btn-primary" onclick="window.location.href='/login'">
-                            Войти в аккаунт
-                        </button>
-                        <button class="btn btn-secondary" onclick="window.location.href='/registration'">
-                            Создать аккаунт
-                        </button>
                     </div>
                 </div>
             </div>
@@ -230,19 +232,75 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadBannersPreview();
         });
-        document.addEventListener('DOMContentLoaded', function() {
-            const cards = document.querySelectorAll('.feature-card');
-            
-            cards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
                 
-                setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
-                }, 100 * index);
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+
+        function navigateToArticles() {
+            const userRole = "{{ role }}";
+            
+            if (userRole === "admin") {
+                window.location.href = '/editarticles';
+            } else if (userRole === "user") {
+                window.location.href = '/articles';
+            } else {
+                window.location.href = '/articles';
+            }
+        }
+
+        function navigateToReviews() {
+            const userRole = "{{ role }}";
+            
+            if (userRole === "admin") {
+                window.location.href = '/editreviews';
+            } else if (userRole === "user") {
+                window.location.href = '/reviews';
+            } else {
+                window.location.href = '/reviews';
+            }
+        }          
+
+        function showArticles() {
+            const mainPage = document.getElementById('mainPage');
+            const articlesPage = document.getElementById('articlesPage');
+            
+            if (mainPage.style.display !== 'none') {
+                mainPage.style.display = 'none';
+                articlesPage.style.display = 'block';
+            } else {
+                mainPage.style.display = 'block';
+                articlesPage.style.display = 'none';
+            }
+        }
+
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function(event) {
+            const dropdowns = document.querySelectorAll('.dropdown');
+            dropdowns.forEach(dropdown => {
+                if (!dropdown.parentElement.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
             });
         });
     </script>
+</body>
 </html>

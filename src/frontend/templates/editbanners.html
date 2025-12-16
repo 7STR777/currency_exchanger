@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель: Баннеры | Валюта-Профи</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/profile" class="header-nav-link">Главная</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="articles-page">
+            <div style="flex: 1;">
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px;">
+                        ← Назад
+                    </button>
+                </div>
+                
+                <div class="make-articles card" style="margin-bottom: 30px; padding: 25px;">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Добавить новый баннер</h3>
+                    
+                    <div class="form-group">
+                        <label class="form-label">URL изображения баннера:</label>
+                        <input type="text" class="form-input" id="bannerUrl" placeholder="https://example.com/banner.jpg">
+                        <div class="error-message" id="urlError" style="display: none;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 25px;">
+                        <button class="btn btn-primary" onclick="addBanner()" style="padding: 12px 30px;">
+                            Добавить баннер
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearBannerForm()" style="padding: 12px 30px;">
+                            Очистить форму
+                        </button>
+                    </div>
+                    
+                    <div id="bannerSuccess" class="success-message">
+                        Баннер успешно добавлен!
+                    </div>
+                </div>
+                
+                <div class="banners-container">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Список баннеров</h3>
+                    <div class="banners-list" id="banners-container">
+                        <!-- Баннеры будут загружены здесь -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card" style="padding: 20px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Здесь будут отображаться предпросмотры баннеров -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Онлайн конвертер валют</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Разделы</h3>
+                <a href="/">Главная</a>
+                <a href="/articles">Статьи</a>
+                <a href="/faq">Вопросы и ответы</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+
+    <script>
+        function clearBannerForm() {
+            document.getElementById('bannerUrl').value = '';
+            document.getElementById('urlError').style.display = 'none';
+            document.getElementById('bannerSuccess').style.display = 'none';
+        }
+
+        async function addBanner() {
+            const url = document.getElementById('bannerUrl').value.trim();
+            
+            document.getElementById('urlError').style.display = 'none';
+            document.getElementById('bannerSuccess').style.display = 'none';
+            
+            if (!url) {
+                document.getElementById('urlError').textContent = 'Введите URL изображения';
+                document.getElementById('urlError').style.display = 'block';
+                return;
+            }
+            
+            // Генерируем HTML код баннера
+            const bannerCode = `<div class="ad-banner"><a href="#" target="_blank"><img src="${url}" alt="Рекламный баннер" style="width: 100%; height: auto;"></a></div>`;
+            
+            try {
+                const response = await fetch('/api/insert/banner', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        code: bannerCode
+                    }),
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    document.getElementById('bannerSuccess').textContent = 'Баннер успешно добавлен!';
+                    document.getElementById('bannerSuccess').style.display = 'block';
+                    
+                    clearBannerForm();
+                    await loadBanners();
+                    await loadBannersPreview();
+                    
+                } else if (response.status === 401) {
+                    alert('Вы не авторизованы! Пожалуйста, войдите в систему.');
+                    window.location.href = '/login';
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка добавления баннера: ${errorData.detail || 'Неизвестная ошибка'}`);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка при добавлении баннера:', error);
+                alert('Ошибка сети. Пожалуйста, попробуйте позже.');
+            }
+        }
+        
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBanners(banners) {
+            const bannersContainer = document.getElementById('banners-container');
+            if (!bannersContainer) return;
+
+            bannersContainer.innerHTML = '';
+            
+            // Сортируем баннеры по ID (новые первыми)
+            banners.sort((a, b) => b.banner_id - a.banner_id);
+            
+            banners.forEach(banner => {
+                const bannerElement = document.createElement('div');
+                bannerElement.className = 'banner-item';
+                
+                bannerElement.innerHTML = `
+                    <div class="banner-info">
+                        <div class="banner-id">ID баннера: ${banner.banner_id}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteBanner(${banner.banner_id})">
+                        Удалить
+                    </button>
+                `;
+                
+                bannersContainer.appendChild(bannerElement);
+            });
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+
+            
+            banners.forEach(banner => {
+                // Извлекаем URL изображения из HTML кода
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-header">
+                        <div class="banner-preview-id">Баннер #${banner.banner_id}</div>
+                    </div>
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        async function deleteBanner(bannerId) {
+            if (!confirm('Удалить баннер #' + bannerId + '?\nЭто действие нельзя отменить.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/delete/banner/${bannerId}`, {
+                    method: 'DELETE',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    await loadBanners();
+                    await loadBannersPreview();
+                } else if (response.status === 401) {
+                    alert('Вы не авторизованы для удаления баннеров');
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка при удалении баннера: ${errorData.detail || 'Неизвестная ошибка'}`);
+                }
+            } catch (error) {
+                console.error('Ошибка при удалении баннера:', error);
+                alert('Ошибка сети при удалении баннера');
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBanners();
+            loadBannersPreview();
+            
+            // Автоматически скрываем сообщение об успехе через 3 секунды
+            setInterval(() => {
+                const successMsg = document.getElementById('bannerSuccess');
+                if (successMsg.style.display === 'block') {
+                    successMsg.style.display = 'none';
+                }
+            }, 3000);
+        });
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+    </script>
+</body>
+</html>

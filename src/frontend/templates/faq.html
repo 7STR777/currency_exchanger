@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="style.css">
+    <title>FAQ</title>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div>
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.location.href='/profile'" style="padding: 10px 10px; margin-top: 30px; margin-left: 30px;">
+                        ← Назад
+                    </button>
+                </div>
+            <p>
+                <div class="card" style="color: white; padding: 30px; border-radius: 12px; margin: 0 auto 30px; text-align: center; width: 1200px;">
+                    <h1 style="font-size: 2.5em; margin-bottom: 15px;">Часто задаваемые вопросы</h1>
+                    <p style="font-size: 1.1em; opacity: 0.9;">
+                        Ответы на самые популярные вопросы о работе нашего сервиса обмена валют
+                    </p>
+                </div>
+            </p>
+            <div class="faq-container">
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            1. Как зарегистрироваться в системе?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Для регистрации нажмите кнопку "Регистрация" в правом верхнем углу сайта. Заполните форму: укажите имя пользователя, электронную почту и пароль. После подтверждения email вы получите полный доступ к сервису.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            2. Какой минимальный и максимальный размер обмена?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Минимальная сумма для обмена составляет 100 рублей (или эквивалент в другой валюте). Максимальная сумма зависит от выбранной валюты и вашего уровня верификации. Для стандартных пользователей лимит - 500,000 рублей в сутки.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            3. Сколько времени занимает обмен валют?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Большинство операций выполняются мгновенно. При обмене популярных валют (USD, EUR, GBP) время обработки составляет 1-5 минут. Для экзотических валют или крупных сумм время может увеличиться до 30 минут.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            4. Какие комиссии взимаются за обмен?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Наш сервис работает с минимальными комиссиями. Стандартная комиссия за обмен составляет 0.5%. Для пользователей с премиум-статусом комиссия снижается до 0.2%. Все комиссии отображаются перед подтверждением операции.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            5. Как верифицировать аккаунт?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Для верификации перейдите в личный кабинет → раздел "Верификация". Вам потребуется предоставить скан-копию паспорта (разворот с фото) и подтверждение адреса проживания. Верификация занимает до 24 часов.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            6. Какие валюты доступны для обмена?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Мы поддерживаем более 50 валют, включая: USD (доллар США), EUR (евро), GBP (фунт стерлингов), CNY (китайский юань), JPY (японская иена), CHF (швейцарский франк), CAD (канадский доллар), AUD (австралийский доллар) и другие.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            7. Как отменить операцию обмена?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Отмена возможна только в течение 5 минут после создания заявки и до момента начала обработки. Для отмены перейдите в раздел "История операций", найдите нужную операцию и нажмите кнопку "Отменить".</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            8. Безопасны ли операции на вашем сайте?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Да, мы используем банковский уровень безопасности: SSL-шифрование, двухфакторная аутентификация, DDoS-защита. Все операции соответствуют требованиям 115-ФЗ и контролируются ЦБ РФ. Ваши средства застрахованы.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            9. Как получить выписку по операциям?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Выписку можно скачать в личном кабинете в разделе "История операций". Доступны форматы PDF и Excel за любой период. Для юридических лиц предоставляем официальные бухгалтерские документы с печатью компании.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-bottom: 20px; margin: 0 auto 30px; width: 1400px;">
+                    <div class="faq-item">
+                        <h3 class="faq-question">
+                            10. Что делать, если операция зависла?
+                        </h3>
+                        <div class="faq-answer">
+                            <p>Если операция не завершается более 30 минут, свяжитесь с нашей поддержкой через онлайн-чат на сайте или по email: support@valuta-profi.ru. Укажите номер операции (есть в истории) для быстрого решения вопроса.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Международные финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2024 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+</body>
+</html>

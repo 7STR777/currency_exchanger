@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ article.title }} | Валюта-Профи</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="articles-page">
+            <div>
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px;">
+                        ← Назад
+                    </button>
+                </div>
+
+                <article class="card" style="padding: 25px; margin-top: 20px; overflow: hidden;">
+                    <h1 style="margin-bottom: 20px; color: #1e3c72;">{{ article.title }}</h1>
+                    
+                    <div class="article-detail-image">
+                        <img src="{{ article.codeimg }}" alt="Изображение статьи">
+                    </div>
+
+                    <div class="article-full-text" style="margin-top: 10px; white-space: pre-wrap;">
+                        {{ article.full_text }}
+                    </div>
+                </article>
+            </div>
+
+            <div class="right-column">
+                <div class="card" style="padding: 20px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Баннеры загружаются динамически> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Международные финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+    <script>
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+            banners.forEach(banner => {
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBannersPreview();
+        });
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+    </script>
+</body>
+</html>
+
+

@@ -12,7 +12,7 @@ def create_jwt_token(payload:dict):
     """
     Функция создания токена
     """
-    expire = datetime.now() + timedelta(hours=1)
+    expire = datetime.now() + timedelta(hours=24)
     payload.update({"exp": expire})
     
     try:
@@ -41,7 +41,7 @@ def get_user_from_header(credentials: HTTPAuthorizationCredentials = Depends(sec
     
 def get_user_from_cookie(request: Request):
     """
-    Зависимость для получения пользователя из cookie access_token.
+    Зависимость для получения пользователя из cookie access_token. Возвращает username пользователя.
     """
     access_token = request.cookies.get("access_token")
     if not access_token:

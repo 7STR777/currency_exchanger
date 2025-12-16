@@ -8,15 +8,19 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Шапка сайта -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
-                <div class="logo-icon">$</div>
-                <span>Быстрый Обменник</span>
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
             </div>
             
-            <!-- Блок пользователя в шапке -->
+            <nav class="header-nav">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
             <div class="logout-section">
                 <div class="user-info">
                     <div class="username">{{ username }}</div>
@@ -27,143 +31,203 @@
         </div>
     </header>
 
-    <!-- Панель навигации -->
     <nav class="nav">
         <div class="nav-content">
             <div class="nav-item">
-                <button class="nav-btn" onclick="showArticles()">
+                <button class="nav-btn" onclick="navigateToArticles()">
                     Статьи
                 </button>
             </div>
             
             <div class="nav-item">
-                <button class="nav-btn" onclick="window.location.href='/exchangers'">
-                    Валютообменик в городе
+                <button class="nav-btn" onclick="navigateToReviews()">
+                    Гостевая книга
                 </button>
             </div>
         </div>
     </nav>
 
-    <!-- Основной контент -->
     <main class="main-content">
         <div style="display: grid; grid-template-columns: 3fr 1fr; gap: 30px;">
-            <!-- Главная страница с историей конвертаций -->
-            <div id="mainPage" class="card">
-                <h2 class="section-title">История конвертаций</h2>
-                <div class="conversion-history">
-                    <div class="history-filters">
-                        <div class="filter-group">
-                            <label for="dateFrom">От:</label>
-                            <input type="date" id="dateFrom" class="form-input" style="width: auto; margin-right: 20px;">
-                        </div>
-                        <div class="filter-group">
-                            <label for="dateTo">До:</label>
-                            <input type="date" id="dateTo" class="form-input" style="width: auto; margin-right: 20px;">
-                        </div>
-                        <button class="btn btn-primary" onclick="filterHistory()">Применить фильтр</button>
+            <div>
+                <section class="hero-section">
+                    <h1 class="hero-title">Международные финансовые услуги </h1>
+                    <p class="hero-subtitle">Покупка/Продажа иностранной валюты переводом и за наличные | 
+                        Оплата зарубежных Счетов от 100 USD | 
+                        Прием и Выдача наличных денежных средств по миру | 
+                        Возможность оплаты с Юридических лиц | 
+                        Возврат валютной выручки </p>
+                    <button class="btn" style="background: white; color: #667eea; font-weight: bold; padding: 15px 40px; font-size: 1.1em;" onclick="window.location.href='/contacts'">
+                        Начать обмен
+                    </button>
+                </section>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">⚡</div>
+                        <h3>Мгновенный обмен</h3>
+                        <p>Операции выполняются за секунды. Получите конвертированные средства сразу</p>
                     </div>
                     
-                    <div class="history-table-container">
-                        <table class="history-table">
-                            <thead>
-                                <tr>
-                                    <th>Дата</th>
-                                    <th>Из валюты</th>
-                                    <th>В валюту</th>
-                                    <th>Сумма</th>
-                                    <th>Результат</th>
-                                    <th>Курс</th>
-                                </tr>
-                            </thead>
-                            <tbody id="historyTableBody">
-                                <tr class="empty-row">
-                                    <td colspan="6" style="text-align: center; padding: 40px; color: #999;">
-                                        История конвертаций пуста. Совершите первую операцию обмена валют.
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="feature-card">
+                        <div class="feature-icon">💎</div>
+                        <h3>Выгодный курс</h3>
+                        <p>Конкурентные курсы обмена без скрытых комиссий и дополнительных платежей</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Безопасность</h3>
+                        <p>Все транзакции защищены современными технологиями шифрования данных</p>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <div class="feature-icon">🌍</div>
+                        <h3>Много валют</h3>
+                        <p>Широкий выбор валют: от доллара и евро до экзотических валют мира</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2 class="section-title">Популярные курсы</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 20px;">
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 1.8em;">🇺🇸</div>
+                            <div style="font-weight: bold;">USD/RUB</div>
+                            <div style="color: #4CAF50; font-size: 1.2em;">85.45 ₽</div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 1.8em;">🇪🇺</div>
+                            <div style="font-weight: bold;">EUR/RUB</div>
+                            <div style="color: #4CAF50; font-size: 1.2em;">92.30 ₽</div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 1.8em;">🇬🇧</div>
+                            <div style="font-weight: bold;">GBP/RUB</div>
+                            <div style="color: #4CAF50; font-size: 1.2em;">107.15 ₽</div>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 1.8em;">🇨🇳</div>
+                            <div style="font-weight: bold;">CNY/RUB</div>
+                            <div style="color: #4CAF50; font-size: 1.2em;">11.80 ₽</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Страница со статьями (скрыта по умолчанию) -->
-            <div id="articlesPage" class="card" style="display: none;">
-                <h2 class="section-title">Статьи</h2>
-                <div class="articles-container">
-                    <div class="article-list">
-                        <div class="article-item">
-                            <h3 class="article-title">Как выбрать лучший курс обмена валют</h3>
-                            <p class="article-preview">Узнайте, на что обращать внимание при выборе обменного пункта и как получить максимально выгодный курс обмена валют.</p>
-                            <span class="article-date">15 января 2025</span>
-                        </div>
-                        <div class="article-item">
-                            <h3 class="article-title">Валютные операции: что нужно знать</h3>
-                            <p class="article-preview">Основные правила и особенности обмена валют, документы, необходимые для операций, и советы по безопасности.</p>
-                            <span class="article-date">10 января 2025</span>
-                        </div>
-                        <div class="article-item">
-                            <h3 class="article-title">Тренды валютного рынка 2025</h3>
-                            <p class="article-preview">Анализ текущей ситуации на валютном рынке и прогнозы экспертов на ближайшие месяцы.</p>
-                            <span class="article-date">5 января 2025</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Рекламный блок справа -->
             <div class="right-column">
-                <div class="card recommendation-card">
-                    <div class="ad-sidebar">
-                        <div class="ad-banner">
-                            <img src="https://cdn.tbank.ru/static/pages/files/ade88b82-3718-4cd2-8efe-d4cb9b6f46b3.png" alt="Реклама">
-                        </div>
-
-                        <div class="ad-banner">
-                            <img src="https://messageguru.ru/wp-content/uploads/2020/09/SBER_%D0%9E%D0%B1%D1%80%D0%B0%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B8%CC%86-%D0%BA%D1%80%D0%B5%D0%B4%D0%B8%D1%82-1.jpg" alt="Реклама">
-                        </div>
-
-                        <div class="ad-banner">
-                            <img src="https://optim.tildacdn.com/tild6135-3832-4838-b539-383830666432/-/format/webp/-.png.webp" alt="Реклама">
-                        </div>
-
-                        <div class="ad-banner">
-                            <img src="https://i.mycdn.me/getVideoPreview?id=7916676319996&idx=5&type=39&tkn=A3OGXzXKDb9jbNnP4nVmP9vWpL0&fn=vid_u" alt="Реклама">
+                <div class="card" style="padding: 20px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Баннеры загружаются динамически> -->
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </main>
-
-    <!-- Подвал сайта -->
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-section">
-                <h3>Контакты</h3>
-                <p>✉️ igor.medvedev2015@gmail.com</p>
+                <h3>Валюта-Профи</h3>
+                <p>Международные финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
             </div>
             
             <div class="footer-section">
-                <h3>Часы работы</h3>
-                <p>Круглосуточный онлайн-обмен</p>
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
             </div>
             
             <div class="footer-section">
                 <h3>Полезные ссылки</h3>
                 <a href="/about">О компании</a>
-                <a href="/rates">Курсы валют</a>
                 <a href="/faq">Частые вопросы</a>
                 <a href="/contacts">Контакты</a>
             </div>
         </div>
         
         <div class="copyright">
-            &copy; 2025 Быстрый Обменник. Все права защищены.
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
         </div>
     </footer>
-
     <script>
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+            banners.forEach(banner => {
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBannersPreview();
+        });
+        
         async function logout() {
             try {
                 const response = await fetch('/logout', {
@@ -172,15 +236,39 @@
                 });
                 
                 if (response.ok) {
-                    window.location.href = '/login';
+                    window.location.href = '/';
                 } else {
                     alert('Ошибка при выходе');
                 }
             } catch (error) {
                 console.error('Logout error:', error);
-                window.location.href = '/login';
+                window.location.href = '/';
             }
         }
+
+        function navigateToArticles() {
+            const userRole = "{{ role }}";
+            
+            if (userRole === "admin") {
+                window.location.href = '/editarticles';
+            } else if (userRole === "user") {
+                window.location.href = '/articles';
+            } else {
+                window.location.href = '/articles';
+            }
+        }
+
+        function navigateToReviews() {
+            const userRole = "{{ role }}";
+            
+            if (userRole === "admin") {
+                window.location.href = '/editreviews';
+            } else if (userRole === "user") {
+                window.location.href = '/reviews';
+            } else {
+                window.location.href = '/reviews';
+            }
+        }        
 
         function showArticles() {
             const mainPage = document.getElementById('mainPage');
@@ -193,14 +281,6 @@
                 mainPage.style.display = 'block';
                 articlesPage.style.display = 'none';
             }
-        }
-
-        function filterHistory() {
-            // Функционал фильтрации будет добавлен позже
-            console.log('Фильтрация истории конвертаций');
-            const dateFrom = document.getElementById('dateFrom').value;
-            const dateTo = document.getElementById('dateTo').value;
-            console.log('Период:', dateFrom, '-', dateTo);
         }
 
         function toggleDropdown(dropdownId) {
