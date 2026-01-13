@@ -2,7 +2,7 @@ from fastapi import HTTPException, status, APIRouter, Form, Depends, Request
 from fastapi.security import HTTPBasic
 from fastapi.responses import HTMLResponse, FileResponse, RedirectResponse, Response, JSONResponse
 import bcrypt
-from auth.schemas import User
+from auth.schemas import User, UserLogin
 from src.auth.security import create_jwt_token, get_user_from_header, get_user_from_cookie
 from src.queries.orm import AsyncORM
 from typing import Annotated
@@ -53,7 +53,7 @@ async def check_username(username: str):
 
 
 @userroute.post("/login")
-async def login(user_in: Annotated[User, Form()], response: Response):
+async def login(user_in: Annotated[UserLogin, Form()], response: Response):
     """
     Этот маршрут проверяет учетные данные пользователя и возвращает JWT токен, если данные правильные.
     """

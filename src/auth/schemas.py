@@ -7,6 +7,10 @@ class User(BaseModel):
     email: str | None = None
     role: str = "user"
 
+class UserLogin(BaseModel):
+    username: str
+    password: str = Field(max_length=32, min_length=8)
+
 class Currency(BaseModel):
     convert_to: str
     convert_from: str

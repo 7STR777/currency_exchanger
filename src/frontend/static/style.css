@@ -406,15 +406,11 @@ a:hover {
     box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
-/* Стили для контейнера баннеров */
 #banners-container {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
-
-
-
 
 .banners-list {
     display: flex;
@@ -469,41 +465,6 @@ a:hover {
     border: 1px solid #c3e6cb;
 }
 
-/* Стили для формы */
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #333;
-}
-
-.form-input {
-    width: 100%;
-    padding: 10px 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #1e3c72;
-    box-shadow: 0 0 0 2px rgba(30, 60, 114, 0.1);
-}
-
-.error-message {
-    color: #dc3545;
-    font-size: 12px;
-    margin-top: 5px;
-    display: none;
-}
-
-/* Стили для предпросмотра баннеров */
 .banner-preview-container {
     margin-top: 20px;
 }
@@ -558,7 +519,6 @@ a:hover {
     border-radius: 8px;
 }
 
-
 .banner-preview-empty {
     text-align: center;
     padding: 30px 20px;
@@ -573,90 +533,11 @@ a:hover {
     font-style: italic;
 }
 
-
-
-
-/* Для формы добавления */
-#banner-form-container {
-    background: #f5f5f5;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 20px;
-}
-
-#add-banner-form textarea {
-    font-family: monospace;
-    margin-bottom: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-#add-banner-form button {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-}
-
-#add-banner-form button:hover {
-    background: #0056b3;
-}
-
 .ad-banner img {
     width: 100%;
     height: auto;
     display: block;
     border-radius: 8px;
-}
-
-/* Стили для статических баннеров */
-.static-banner {
-    background: #f8f9fa !important;
-    border: 2px dashed #dee2e6 !important;
-    box-shadow: none !important;
-    transition: none !important;
-}
-
-.static-banner:hover {
-    transform: none !important;
-    box-shadow: none !important;
-}
-
-.static-banner-content {
-    padding: 20px;
-    text-align: center;
-    color: #6c757d;
-}
-
-.static-banner-icon {
-    font-size: 24px;
-    margin-bottom: 10px;
-}
-
-.static-banner-text {
-    font-weight: 500;
-    margin-bottom: 5px;
-}
-
-.static-banner-subtitle {
-    font-size: 12px;
-    opacity: 0.8;
-}
-
-/* Адаптивность для мобильных устройств */
-@media (max-width: 1024px) {
-    .ad-sidebar {
-        grid-template-columns: repeat(2, minmax(120px, 1fr));
-    }
-}
-
-@media (max-width: 600px) {
-    .ad-sidebar {
-        grid-template-columns: 1fr;
-    }
 }
 
 .main-content {
@@ -742,8 +623,6 @@ a:hover {
     border-bottom: 2px solid #4CAF50;
 }
 
-
-/* Стили для истории конвертаций */
 .conversion-history {
     width: 100%;
 }
@@ -892,7 +771,6 @@ a:hover {
     font-size: 1em;
 }
 
-/* Полная статья: картинка слева, текст с обтеканием */
 .article-detail-image {
     float: left;
     max-width: 40%;
@@ -1026,32 +904,6 @@ a:hover {
     height: fit-content;
 }
 
-/* Адаптивность */
-@media (max-width: 1024px) {
-    .reviews-page {
-        grid-template-columns: 1fr;
-    }
-    
-    .right-column {
-        position: static;
-    }
-    
-    .rating-options {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 768px) {
-    .reviews-page {
-        padding: 15px;
-    }
-    
-    .review-item {
-        padding: 15px;
-    }
-}
-
 .delete-btn {
     background: #dc3545;
     color: white;
@@ -1105,4 +957,299 @@ a:hover {
     gap: 10px;
     justify-content: center;
     margin-top: 20px;
+}
+
+.converter-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.converter-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.converter-header {
+    margin-bottom: 30px;
+}
+
+.converter-title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.converter-description {
+    color: #7f8c8d;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.converter-form {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 20px;
+    align-items: end;
+    margin-bottom: 30px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #34495e;
+    margin-bottom: 8px;
+}
+
+.amount-input {
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+.amount-input:focus {
+    outline: none;
+    border-color: #3498db;
+}
+
+.currency-select {
+    position: relative;
+}
+
+.select-button {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 12px 15px;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.select-button:hover {
+    border-color: #3498db;
+}
+
+.currency-flag {
+    font-size: 20px;
+    margin-right: 8px;
+}
+
+.currency-code {
+    font-weight: 500;
+    color: #2c3e50;
+    margin-right: 8px;
+}
+
+.currency-name {
+    color: #7f8c8d;
+    font-size: 14px;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.select-arrow {
+    color: #7f8c8d;
+    transition: transform 0.3s ease;
+}
+
+.select-arrow.open {
+    transform: rotate(180deg);
+}
+
+.currency-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    margin-top: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+.currency-dropdown.show {
+    display: block;
+}
+
+.currency-search {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.search-input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.currency-list {
+    max-height: 250px;
+    overflow-y: auto;
+}
+
+.currency-option {
+    display: flex;
+    align-items: center;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.currency-option:hover {
+    background-color: #f8f9fa;
+}
+
+.currency-option.active {
+    background-color: #e3f2fd;
+}
+
+.swap-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.swap-icon {
+    width: 40px;
+    height: 40px;
+    background: #3498db;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    border: none;
+    font-size: 20px;
+}
+
+.swap-icon:hover {
+    background: #2980b9;
+}
+
+.result-container {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 15px;
+    padding: 30px;
+    color: white;
+    margin-top: 20px;
+}
+
+.result-label {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 5px;
+}
+
+.result-amount {
+    font-size: 36px;
+    font-weight: 600;
+    margin: 10px 0;
+}
+
+.result-details {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+
+.detail-item {
+    text-align: center;
+}
+
+.detail-value {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.detail-label {
+    font-size: 12px;
+    opacity: 0.8;
+    margin-top: 5px;
+}
+
+.convert-button {
+    width: 100%;
+    padding: 15px;
+    background: #2ecc71;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.convert-button:hover {
+    background: #27ae60;
+}
+
+.convert-button:disabled {
+    background: #95a5a6;
+    cursor: not-allowed;
+}
+
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #7f8c8d;
+}
+
+.error-message {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    display: none;
+}
+
+@media (max-width: 768px) {
+    .converter-form {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        gap: 15px;
+    }
+    
+    .swap-button {
+        order: 3;
+    }
+    
+    .swap-icon {
+        transform: rotate(90deg);
+    }
+    
+    .result-amount {
+        font-size: 28px;
+    }
 }

@@ -15,7 +15,7 @@ for path_candidate in (REPO_ROOT, SRC_DIR):
         sys.path.insert(0, path_candidate)
 
 from src.auth.users import userroute
-from src.auth.currency import currencyroute
+from currency.currency import currencyroute
 from src.banners.banners import banner_router
 from src.articles.articles import article_router
 from src.reviews.reviews import review_router
