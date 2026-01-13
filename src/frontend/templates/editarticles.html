@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ-панель: Статьи | Валюта-Профи</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="articles-page">
+            <div>
+                <div class="back-button">
+                    <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px;">
+                        ← Назад
+                    </button>
+                </div>
+                
+                <div class="make-articles card" style="margin-bottom: 30px; padding: 25px;">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Добавить новую статью</h3>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Заголовок:</label>
+                        <input type="text" class="title-text form-input" id="articleTitle" placeholder="Введите заголовок статьи">
+                        <div class="error-message" id="titleError" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Краткое описание:</label>
+                        <textarea class="intro-text form-input" id="articleIntro" rows="3" placeholder="Введите краткое описание статьи"></textarea>
+                        <div class="error-message" id="introError" style="display: none;"></div>
+                    </div>
+                    
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Полный текст:</label>
+                        <textarea class="full-text form-input" id="articleFull" rows="8" placeholder="Введите полный текст статьи"></textarea>
+                        <div class="error-message" id="fullError" style="display: none;"></div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 20px;">
+                        <label class="form-label">Код вставки изображения:</label>
+                        <textarea class="code img form-input" id="articleImg" rows="1" placeholder="Введите код вставки изображения"></textarea>
+                        <div class="error-message" id="codeImgError" style="display: none;"></div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="addArticle()" style="padding: 12px 30px;">
+                            Добавить статью
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearArticleForm()" style="padding: 12px 30px;">
+                            Очистить форму
+                        </button>
+                    </div>
+                    
+                    <div id="articleSuccess" class="success-message" style="display: none; margin-top: 15px; padding: 10px; background: #d4edda; color: #155724; border-radius: 6px;">
+                        Статья успешно добавлена!
+                    </div>
+                </div>
+                
+                <div class="articles-container">
+                    <h3 style="margin-bottom: 20px; color: #1e3c72;">Список статей</h3>
+                    <div class="article-list">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="right-column">
+                <div class="card" style="padding: 20px;">
+                    <div class="banner-preview-container">
+                        <div id="banners-preview" class="banner-preview-list">
+                            <!-- Баннеры загружаются динамически> -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </main>
+
+    <!-- Модальное окно подтверждения удаления -->
+    <div id="deleteModal" class="confirmation-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px;">Удалить статью?</h3>
+            <p id="deleteMessage">Вы уверены, что хотите удалить эту статью?</p>
+            <p style="font-size: 14px; color: #666; margin-top: 10px;">Это действие нельзя отменить.</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="cancelDelete()">Отмена</button>
+                <button class="btn btn-danger" onclick="confirmDelete()">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+
+    <script>
+        let userRole = "{{ role }}";
+
+        async function loadBanners() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBanners(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров:', error);
+            }
+        }
+        
+        async function loadBannersPreview() {
+            try {
+                const response = await fetch('/api/banners', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const banners = await response.json();
+                    renderBannersPreview(banners);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки баннеров для предпросмотра:', error);
+            }
+        }
+        
+        function renderBannersPreview(banners) {
+            const previewContainer = document.getElementById('banners-preview');
+            if (!previewContainer) return;
+
+            previewContainer.innerHTML = '';
+            
+            banners.forEach(banner => {
+                let imageUrl = '';
+                try {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(banner.code, 'text/html');
+                    const img = doc.querySelector('img');
+                    if (img && img.src) {
+                        imageUrl = img.src;
+                    }
+                } catch (e) {
+                    console.error('Ошибка при парсинге HTML баннера:', e);
+                }
+                
+                const previewElement = document.createElement('div');
+                previewElement.className = 'banner-preview-item';
+                
+                previewElement.innerHTML = `
+                    <div class="banner-preview-content">
+                        ${imageUrl ? 
+                            `<img src="${imageUrl}" alt="Баннер ${banner.banner_id}" class="banner-preview-img">` : 
+                            `<div style="padding: 30px; text-align: center; color: #999; background: #f5f5f5;">
+                                <p>Не удалось загрузить изображение</p>
+                            </div>`
+                        }
+                    </div>
+                `;
+                previewContainer.appendChild(previewElement);
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBannersPreview();
+        });
+        
+        function clearArticleForm() {
+            document.getElementById('articleTitle').value = '';
+            document.getElementById('articleIntro').value = '';
+            document.getElementById('articleFull').value = '';
+            document.getElementById('articleImg').value = '';
+            document.getElementById('titleError').style.display = 'none';
+            document.getElementById('introError').style.display = 'none';
+            document.getElementById('fullError').style.display = 'none';
+            document.getElementById('codeImgError').style.display = 'none';
+            document.getElementById('articleSuccess').style.display = 'none';
+        }
+
+        async function addArticle() {
+            const title = document.getElementById('articleTitle').value.trim();
+            const intro = document.getElementById('articleIntro').value.trim();
+            const full = document.getElementById('articleFull').value.trim();
+            const codeimg = document.getElementById('articleImg').value.trim();
+            
+            document.getElementById('titleError').style.display = 'none';
+            document.getElementById('introError').style.display = 'none';
+            document.getElementById('fullError').style.display = 'none';
+            document.getElementById('articleSuccess').style.display = 'none';
+            
+            let hasError = false;
+            
+            if (!title) {
+                document.getElementById('titleError').textContent = 'Введите заголовок статьи';
+                document.getElementById('titleError').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (!intro) {
+                document.getElementById('introError').textContent = 'Введите краткое описание';
+                document.getElementById('introError').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (!full) {
+                document.getElementById('fullError').textContent = 'Введите полный текст статьи';
+                document.getElementById('fullError').style.display = 'block';
+                hasError = true;
+            }
+            
+            if (hasError) return;
+            
+            try {
+                const articleData = {
+                    title: title,
+                    intro_text: intro,
+                    full_text: full,
+                    codeimg: codeimg
+                };
+                
+                const response = await fetch('/api/insert/article', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(articleData),
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    document.getElementById('articleSuccess').textContent = 'Статья успешно добавлена!';
+                    document.getElementById('articleSuccess').style.display = 'block';
+                    
+                    clearArticleForm();
+                    await loadArticles();
+                    
+                } else if (response.status === 401) {
+                    alert('Вы не авторизованы! Пожалуйста, войдите в систему.');
+                    window.location.href = '/login';
+                } else if (response.status === 422) {
+                    const errorData = await response.json();
+                    console.error('Ошибка валидации:', errorData);
+                    alert(`Ошибка валидации данных: ${JSON.stringify(errorData.detail)}`);
+                } else {
+                    const errorData = await response.json();
+                    alert(`Ошибка добавления статьи: ${errorData.detail || 'Неизвестная ошибка'}`);
+                }
+                
+            } catch (error) {
+                console.error('Ошибка при добавлении статьи:', error);
+                alert('Ошибка сети. Пожалуйста, попробуйте позже.');
+            }
+        }
+        
+        async function loadArticles() {
+            try {
+                const response = await fetch('/api/articles', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const articles = await response.json();
+                    renderArticles(articles);
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки статей:', error);
+            }
+        }
+        
+        function renderArticles(articles) {
+            const articleList = document.querySelector('.article-list');
+            if (!articleList) return;
+
+            articleList.innerHTML = '';
+            
+            // Сортируем статьи по ID (новые первыми)
+            articles.sort((a, b) => b.article_id - a.article_id);
+            
+            articles.forEach(article => {
+                const articleElement = document.createElement('div');
+                articleElement.className = 'article-item';
+                articleElement.style.cssText = 'background: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: relative;';
+                
+                articleElement.innerHTML = `
+                    <div class="article-item-content" style="display: flex; gap: 20px; align-items: flex-start;">
+                        <div class="article-image" style="flex: 0 0 160px;">
+                            ${article.codeimg ? `<img src="${article.codeimg}" alt="Изображение статьи" style="width: 100%; height: auto; border-radius: 10px; object-fit: cover;">` : ''}
+                        </div>
+                        <div class="article-text" style="flex: 1;">
+                            <h3 class="article-title" style="margin: 0 0 10px 0; color: #333;">${article.title}</h3>
+                            <p class="article-preview" style="color: #666; margin-bottom: 10px;">${article.intro_text}</p>
+                            <div style="font-size: 12px; color: #888;">
+                                ID: ${article.article_id}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="article-actions">
+                        <button class="delete-btn" onclick="deleteArticle(${article.article_id})">
+                            Удалить
+                        </button>
+                    </div>
+                `;
+                
+                articleList.appendChild(articleElement);
+            });
+        }
+
+        // Удаление статьи без подтверждения
+        async function deleteArticle(articleId) {
+            if (!confirm('Удалить статью?')) {
+                return; // Пользователь отменил удаление
+            }
+
+            const response = await fetch(`/api/delete/article/${articleId}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            });
+        }
+        
+        function viewArticle(id) {
+            window.location.href = `/article/${id}`;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadArticles();
+            
+            // Закрытие модального окна при клике вне его
+            document.getElementById('deleteModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    cancelDelete();
+                }
+            });
+        });
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        };
+    </script>
+</body>
+</html>

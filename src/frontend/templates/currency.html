@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Конвертер валют | Валюта-Профи</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="header-content" style="display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 20px;">
+            <div class="logo">
+                <div class="logo-icon">₽</div>
+                <span class="logo-text">Валюта-Профи</span>
+            </div>
+            
+            <nav class="header-nav" style="display: flex; justify-content: center; gap: 30px;">
+                <a href="/about" class="header-nav-link">О компании</a>
+                <a href="/faq" class="header-nav-link">Частые вопросы</a>
+                <a href="/contacts" class="header-nav-link">Контакты</a>
+            </nav>
+            
+            <div class="logout-section">
+                <div class="user-info">
+                    <div class="username">{{ username }}</div>
+                    <div class="email">{{ email }}</div>
+                </div>
+                <button onclick="logout()" class="btn btn-danger">Выйти</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="converter-page">
+            <div class="back-button">
+                <button class="btn btn-secondary" onclick="window.history.back()" style="padding: 10px 20px;">
+                    ← Назад
+                </button>
+            </div>
+            
+            <div class="converter-container">
+                <div class="converter-card">
+                    <div class="converter-header">
+                        <h1 class="converter-title">Конвертер валют</h1>
+                        <p class="converter-description">
+                            Быстрая конвертация валют по актуальному курсу. Выберите валюты и введите сумму для конвертации.
+                        </p>
+                    </div>
+                    
+                    <div class="error-message" id="errorMessage"></div>
+                    
+                    <div class="converter-form">
+                        <!-- Левая часть: Из валюты -->
+                        <div class="form-group">
+                            <label class="form-label">Отдаете</label>
+                            <div class="currency-select">
+                                <button type="button" class="select-button" id="fromCurrencyButton" onclick="toggleDropdown('from')">
+                                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                                        <span class="currency-flag" id="fromFlag">🇷🇺</span>
+                                        <span class="currency-code" id="fromCode">RUB</span>
+                                        <span class="currency-name" id="fromName">Российский рубль</span>
+                                    </div>
+                                    <span class="select-arrow" id="fromArrow">▼</span>
+                                </button>
+                                <div class="currency-dropdown" id="fromDropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="search-input" placeholder="Поиск валюты..." 
+                                               oninput="searchCurrency(this.value, 'from')">
+                                    </div>
+                                    <div class="currency-list" id="fromList">
+                                        <!-- Список валют будет загружен динамически -->
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="number" class="amount-input" id="amountInput" placeholder="Введите сумму" 
+                                   min="0" step="0.01" value="1000">
+                        </div>
+                        
+                        <div class="swap-button">
+                            <button class="swap-icon" onclick="swapCurrencies()">
+                                ↔
+                            </button>
+                        </div>
+                        
+                        <!-- Правая часть: В валюту -->
+                        <div class="form-group">
+                            <label class="form-label">Получаете</label>
+                            <div class="currency-select">
+                                <button type="button" class="select-button" id="toCurrencyButton" onclick="toggleDropdown('to')">
+                                    <div style="display: flex; align-items: center; flex-grow: 1;">
+                                        <span class="currency-flag" id="toFlag">🇺🇸</span>
+                                        <span class="currency-code" id="toCode">USD</span>
+                                        <span class="currency-name" id="toName">Доллар США</span>
+                                    </div>
+                                    <span class="select-arrow" id="toArrow">▼</span>
+                                </button>
+                                <div class="currency-dropdown" id="toDropdown">
+                                    <div class="currency-search">
+                                        <input type="text" class="search-input" placeholder="Поиск валюты..." 
+                                               oninput="searchCurrency(this.value, 'to')">
+                                    </div>
+                                    <div class="currency-list" id="toList">
+                                        <!-- Список валют будет загружен динамически -->
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="text" class="amount-input" id="resultInput" placeholder="Результат" readonly>
+                        </div>
+                    </div>
+                    
+                    <button class="convert-button" id="convertButton" onclick="convertCurrency()">
+                        Конвертировать
+                    </button>
+                    
+                    <div class="result-container" id="resultContainer" style="display: none;">
+                        <div class="result-label">Сумма после конвертации</div>
+                        <div class="result-amount" id="finalAmount">0</div>
+                        <div class="result-details">
+                            <div class="detail-item">
+                                <div class="detail-value" id="detailFromAmount">0</div>
+                                <div class="detail-label" id="detailFromCode">RUB</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">=</div>
+                                <div class="detail-label">равно</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value" id="detailToAmount">0</div>
+                                <div class="detail-label" id="detailToCode">USD</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="loading" id="loading" style="display: none;">
+                        Загрузка курсов валют...
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Валюта-Профи</h3>
+                <p>Финансовые услуги</p>
+                <p>Работаем с 2015 года</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <p>support@valuta-profi.ru</p>
+                <p>+7 (495) 123-45-67</p>
+            </div>
+            
+            <div class="footer-section">
+                <h3>Полезные ссылки</h3>
+                <a href="/about">О компании</a>
+                <a href="/faq">Частые вопросы</a>
+                <a href="/contacts">Контакты</a>
+            </div>
+        </div>
+        
+        <div class="copyright">
+            &copy; 2015-2025 Валюта-Профи. Все права защищены.
+        </div>
+    </footer>
+    
+    <script>
+        let currencies = [];
+        let selectedFrom = 'RUB';
+        let selectedTo = 'USD';
+        let currencyFlags = {};
+        
+        const predefinedFlags = {
+            'RUB': '🇷🇺', 'USD': '🇺🇸', 'EUR': '🇪🇺', 'GBP': '🇬🇧', 
+            'JPY': '🇯🇵', 'CNY': '🇨🇳', 'CHF': '🇨🇭', 'CAD': '🇨🇦',
+            'AUD': '🇦🇺', 'NZD': '🇳🇿', 'BRL': '🇧🇷', 'INR': '🇮🇳',
+            'TRY': '🇹🇷', 'KRW': '🇰🇷', 'MXN': '🇲🇽', 'ZAR': '🇿🇦',
+            'SEK': '🇸🇪', 'NOK': '🇳🇴', 'DKK': '🇩🇰', 'PLN': '🇵🇱',
+            'HKD': '🇭🇰', 'SGD': '🇸🇬', 'THB': '🇹🇭', 'IDR': '🇮🇩',
+            'AED': '🇦🇪', 'SAR': '🇸🇦', 'ILS': '🇮🇱', 'UAH': '🇺🇦',
+            'KZT': '🇰🇿', 'BYN': '🇧🇾'
+        };
+        
+        async function loadCurrencies() {
+            try {
+                showLoading(true);
+                const response = await fetch('/api/rates', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.success) {
+                        currencies = Object.entries(data.currencies).map(([code, name]) => ({
+                            code,
+                            name
+                        }));
+                        
+                        currencies.forEach(currency => {
+                            currencyFlags[currency.code] = predefinedFlags[currency.code] || '🏳️';
+                        });
+                        
+                        renderCurrencyLists();
+                        updateSelectedCurrencies();
+                    }
+                }
+            } catch (error) {
+                console.error('Ошибка загрузки списка валют:', error);
+                showError('Не удалось загрузить список валют');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function renderCurrencyLists() {
+            renderCurrencyList('from');
+            renderCurrencyList('to');
+        }
+        
+        function renderCurrencyList(type) {
+            const listElement = document.getElementById(`${type}List`);
+            if (!listElement) return;
+            
+            listElement.innerHTML = '';
+            
+            currencies.forEach(currency => {
+                const option = document.createElement('div');
+                option.className = 'currency-option';
+                if (currency.code === (type === 'from' ? selectedFrom : selectedTo)) {
+                    option.classList.add('active');
+                }
+                
+                option.innerHTML = `
+                    <span class="currency-flag">${currencyFlags[currency.code] || '🏳️'}</span>
+                    <div style="margin-left: 10px; overflow: hidden;">
+                        <div style="font-weight: 500; color: #2c3e50;">${currency.code}</div>
+                        <div style="font-size: 12px; color: #7f8c8d; overflow: hidden; text-overflow: ellipsis;">${currency.name}</div>
+                    </div>
+                `;
+                
+                option.onclick = () => selectCurrency(currency.code, type);
+                listElement.appendChild(option);
+            });
+        }
+        
+        function searchCurrency(query, type) {
+            const listElement = document.getElementById(`${type}List`);
+            if (!listElement || !query.trim()) {
+                renderCurrencyList(type);
+                return;
+            }
+            
+            const filtered = currencies.filter(currency => 
+                currency.code.toLowerCase().includes(query.toLowerCase()) ||
+                currency.name.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            listElement.innerHTML = '';
+            
+            filtered.forEach(currency => {
+                const option = document.createElement('div');
+                option.className = 'currency-option';
+                if (currency.code === (type === 'from' ? selectedFrom : selectedTo)) {
+                    option.classList.add('active');
+                }
+                
+                option.innerHTML = `
+                    <span class="currency-flag">${currencyFlags[currency.code] || '🏳️'}</span>
+                    <div style="margin-left: 10px; overflow: hidden;">
+                        <div style="font-weight: 500; color: #2c3e50;">${currency.code}</div>
+                        <div style="font-size: 12px; color: #7f8c8d; overflow: hidden; text-overflow: ellipsis;">${currency.name}</div>
+                    </div>
+                `;
+                
+                option.onclick = () => selectCurrency(currency.code, type);
+                listElement.appendChild(option);
+            });
+        }
+        
+        function selectCurrency(code, type) {
+            if (type === 'from') {
+                selectedFrom = code;
+            } else {
+                selectedTo = code;
+            }
+            
+            updateSelectedCurrencies();
+            hideAllDropdowns();
+            
+            document.querySelectorAll('.currency-option.active').forEach(el => {
+                el.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.currency-option').forEach(option => {
+                const optionCode = option.querySelector('div div:first-child').textContent;
+                if (optionCode === code) {
+                    option.classList.add('active');
+                }
+            });
+        }
+        
+        function updateSelectedCurrencies() {
+            const fromCurrency = currencies.find(c => c.code === selectedFrom);
+            const toCurrency = currencies.find(c => c.code === selectedTo);
+            
+            if (fromCurrency) {
+                document.getElementById('fromFlag').textContent = currencyFlags[selectedFrom] || '🏳️';
+                document.getElementById('fromCode').textContent = selectedFrom;
+                document.getElementById('fromName').textContent = fromCurrency.name;
+            }
+            
+            if (toCurrency) {
+                document.getElementById('toFlag').textContent = currencyFlags[selectedTo] || '🏳️';
+                document.getElementById('toCode').textContent = selectedTo;
+                document.getElementById('toName').textContent = toCurrency.name;
+            }
+            
+            document.getElementById('detailFromCode').textContent = selectedFrom;
+            document.getElementById('detailToCode').textContent = selectedTo;
+        }
+        
+        function toggleDropdown(type) {
+            const dropdown = document.getElementById(`${type}Dropdown`);
+            const arrow = document.getElementById(`${type}Arrow`);
+            const isOpen = dropdown.classList.contains('show');
+            
+            hideAllDropdowns();
+            
+            if (!isOpen) {
+                dropdown.classList.add('show');
+                arrow.classList.add('open');
+                
+                setTimeout(() => {
+                    const searchInput = dropdown.querySelector('.search-input');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }, 100);
+            }
+        }
+        
+        function hideAllDropdowns() {
+            document.querySelectorAll('.currency-dropdown').forEach(dropdown => {
+                dropdown.classList.remove('show');
+            });
+            
+            document.querySelectorAll('.select-arrow').forEach(arrow => {
+                arrow.classList.remove('open');
+            });
+        }
+        
+        function swapCurrencies() {
+            [selectedFrom, selectedTo] = [selectedTo, selectedFrom];
+            updateSelectedCurrencies();
+            
+            const resultInput = document.getElementById('resultInput');
+            const amountInput = document.getElementById('amountInput');
+            
+            if (resultInput.value && amountInput.value) {
+                [resultInput.value, amountInput.value] = [amountInput.value, resultInput.value];
+            }
+            
+            renderCurrencyLists();
+        }
+        
+        async function convertCurrency() {
+            const amount = document.getElementById('amountInput').value;
+            
+            if (!amount || parseFloat(amount) <= 0) {
+                showError('Пожалуйста, введите корректную сумму');
+                return;
+            }
+            
+            if (selectedFrom === selectedTo) {
+                showError('Пожалуйста, выберите разные валюты');
+                return;
+            }
+            
+            try {
+                showLoading(true);
+                hideError();
+                
+                const response = await fetch(`/api/convert?convert_from=${selectedFrom}&convert_to=${selectedTo}&convert_amount=${amount}`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const result = data['Convertation result'];
+                    
+                    document.getElementById('resultInput').value = result.Converted_amount.toFixed(2);
+                    
+                    document.getElementById('finalAmount').textContent = 
+                        `${result.Converted_amount.toFixed(2)} ${selectedTo}`;
+                    document.getElementById('detailFromAmount').textContent = 
+                        `${result.Amount} ${selectedFrom}`;
+                    document.getElementById('detailToAmount').textContent = 
+                        `${result.Converted_amount.toFixed(2)} ${selectedTo}`;
+                    
+                    document.getElementById('resultContainer').style.display = 'block';
+                    
+                } else if (response.status === 401) {
+                    showError('Ошибка авторизации. Пожалуйста, войдите снова.');
+                    setTimeout(() => {
+                        window.location.href = '/';
+                    }, 2000);
+                } else {
+                    const error = await response.text();
+                    showError(`Ошибка конвертации: ${error}`);
+                }
+            } catch (error) {
+                console.error('Ошибка конвертации:', error);
+                showError('Ошибка соединения с сервером');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            document.getElementById('convertButton').disabled = show;
+        }
+        
+        function showError(message) {
+            const errorElement = document.getElementById('errorMessage');
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            setTimeout(hideError, 5000);
+        }
+        
+        function hideError() {
+            document.getElementById('errorMessage').style.display = 'none';
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('/logout', {
+                    method: 'POST',
+                    credentials: 'include'  
+                });
+                
+                if (response.ok) {
+                    window.location.href = '/';
+                } else {
+                    alert('Ошибка при выходе');
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+                window.location.href = '/';
+            }
+        }
+        
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.currency-select')) {
+                hideAllDropdowns();
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCurrencies();
+            
+            document.getElementById('amountInput').addEventListener('input', function() {
+            });
+        });
+    </script>
+</body>
+</html>

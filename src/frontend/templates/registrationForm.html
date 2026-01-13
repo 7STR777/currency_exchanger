@@ -46,29 +46,79 @@
     </div>
 
     <script>
-            document.getElementById('registrationForm').addEventListener('submit', function(e) {
+        document.getElementById('registrationForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
+            const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            document.getElementById('confirmPasswordError').style.display = 'none';
+            const usernameError = document.getElementById('usernameError');
+            const confirmPasswordError = document.getElementById('confirmPasswordError');
+            
+            if (usernameError) usernameError.style.display = 'none';
+            if (confirmPasswordError) confirmPasswordError.style.display = 'none';
             
             let isValid = true;
+
+            try {
+                const checkResponse = await fetch(`/check-username?username=${encodeURIComponent(username)}`);
+                if (checkResponse.ok) {
+                    const checkData = await checkResponse.json();
+                    if (checkData.exists) {
+                        if (usernameError) {
+                            usernameError.style.display = 'block';
+                            usernameError.textContent = 'Пользователь с таким username уже зарегистрирован';
+                        }
+                        isValid = false;
+                    }
+                }
+            } catch (err) {
+                console.error('Ошибка при проверке username:', err);
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                return;
+            }
             
             if (password.length < 8) {
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                document.getElementById('confirmPasswordError').textContent = 'Пароль должен быть длиннее 8 символов';
+                if (confirmPasswordError) {
+                    confirmPasswordError.style.display = 'block';
+                    confirmPasswordError.textContent = 'Пароль должен быть длиннее 8 символов';
+                }
                 isValid = false;
             }
             else if (password !== confirmPassword) {
-                document.getElementById('confirmPasswordError').style.display = 'block';
-                document.getElementById('confirmPasswordError').textContent = 'Пароли не совпадают';
+                if (confirmPasswordError) {
+                    confirmPasswordError.style.display = 'block';
+                    confirmPasswordError.textContent = 'Пароли не совпадают';
+                }
                 isValid = false;
             }
             
             if (isValid) {
-                this.submit();
+
+                const formData = new FormData(this);
+                
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json',
+                    }
+                });
+
+                if (response.ok) {
+                    window.location.href = '/login';
+                } else if (response.status === 400) {
+                    const errorData = await response.json();
+                    
+                    if (usernameError) {
+                        usernameError.style.display = 'block';
+                        usernameError.textContent = errorData.detail || 'Такой username уже существует';
+                    }
+                } 
             }
         });
     </script>
